@@ -891,6 +891,14 @@ video {
   padding-bottom: 3rem;
 }
 
+.pl-\[209px\] {
+  padding-left: 209px;
+}
+
+.pt-\[5px\] {
+  padding-top: 5px;
+}
+
 .pt-20 {
   padding-top: 5rem;
 }
@@ -1375,6 +1383,10 @@ body {
 
   .lg\:block {
     display: block;
+  }
+
+  .lg\:hidden {
+    display: none;
   }
 
   .lg\:h-12 {
