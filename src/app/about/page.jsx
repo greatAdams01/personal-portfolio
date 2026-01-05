@@ -41,7 +41,7 @@ function MailIcon(props) {
 export const metadata = {
   title: 'About',
   description:
-    'I’m Spencer Sharp. I live in New York City, where I design the future.',
+    'I’m Great Adams. I live in Rivers State, Nigeria, where I design the future.',
 }
 
 export default function About() {
@@ -64,7 +64,7 @@ export default function About() {
           </h1>
           <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
             <p>
-              My blockcahin journey began in 2022 after reading a facebook post on "Programmable money" by Oluwashina Peter. Curiusity sparked and that began my three years journey into the world of blockchain.
+              My blockcahin journey began in 2022 after reading a facebook post on "Programmable money" by Oluwashina Peter. Curiosity sparked and that began my three years journey into the world of blockchain.
             </p>
             <p>
               For as long as I can remember, I've been obsessed with understanding how things work. As a kid growing up in Nigeria, I'd dismantle home appliances, wall switches, and gadgets just to figure them out—often landing me in hot water with my family 😂.

@@ -19,7 +19,7 @@ const projects = [
   {
     name: 'DEPE',
     description:
-      'DEPE is a decentralized exchange protocol that allows you to trade your tokens with other users, on Farcaster and Base app.',
+      'DEPE is a decentralized meme contest arena that allows you to submit your memes and compete for rewards, on Farcaster and Base app.',
     link: { href: 'https://miniapp.depe.online/', label: 'depe.online' },
     logo: logoDepe,
   },
@@ -74,11 +74,11 @@ export default function Projects() {
       >
         {projects.map((project) => (
           <Card as="li" key={project.name}>
-            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-md ring-1 shadow-zinc-800/5 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
+            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-lg bg-white shadow-md ring-1 shadow-zinc-800/5 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
               <Image
                 src={project.logo}
                 alt=""
-                className="h-8 w-8"
+                className="h-8 w-8 rounded-lg"
                 unoptimized
               />
             </div>
