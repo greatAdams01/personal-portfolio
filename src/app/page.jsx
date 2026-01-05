@@ -3,7 +3,6 @@ import Link from 'next/link'
 import clsx from 'clsx'
 
 import { Button } from '@/components/Button'
-import { Card } from '@/components/Card'
 import { Container } from '@/components/Container'
 import {
   GitHubIcon,
@@ -21,8 +20,6 @@ import image2 from '@/images/photos/image-2.jpg'
 import image3 from '@/images/photos/image-3.jpg'
 import image4 from '@/images/photos/image-4.jpg'
 import image5 from '@/images/photos/image-5.jpg'
-import { getAllArticles } from '@/lib/articles'
-import { formatDate } from '@/lib/formatDate'
 
 function MailIcon(props) {
   return (
@@ -83,18 +80,22 @@ function ArrowDownIcon(props) {
   )
 }
 
-function Article({ article }) {
+function CodeIcon(props) {
   return (
-    <Card as="article">
-      <Card.Title href={`/articles/${article.slug}`}>
-        {article.title}
-      </Card.Title>
-      <Card.Eyebrow as="time" dateTime={article.date} decorate>
-        {formatDate(article.date)}
-      </Card.Eyebrow>
-      <Card.Description>{article.description}</Card.Description>
-      <Card.Cta>Read article</Card.Cta>
-    </Card>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path
+        d="m8 8-4 4 4 4M16 8l4 4-4 4M12 3l-2 18"
+        className="stroke-zinc-400 dark:stroke-zinc-500"
+      />
+    </svg>
   )
 }
 
@@ -257,18 +258,214 @@ function Photos() {
   )
 }
 
+async function getTweets() {
+  try {
+    // In server components, we can use relative URLs or construct absolute URL
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+    
+    const response = await fetch(`${baseUrl}/api/tweets`, {
+      next: { revalidate: 3600 }, // Revalidate every hour
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    
+    if (!response.ok) {
+      return null
+    }
+    
+    const data = await response.json()
+    return data.data || []
+  } catch (error) {
+    console.error('Error fetching tweets:', error)
+    return null
+  }
+}
+
+function formatTweetDate(dateString) {
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffInSeconds = Math.floor((now - date) / 1000)
+  
+  if (diffInSeconds < 60) return 'just now'
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`
+  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`
+  
+  return date.toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric',
+    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+  })
+}
+
+function TweetCard({ tweet }) {
+  const tweetUrl = `https://twitter.com/greatAdams01/status/${tweet.id}`
+  // Filter only photo media (exclude videos, gifs, etc.)
+  const images = tweet.media?.filter((m) => m.type === 'photo') || []
+  
+  return (
+    <a
+      href={tweetUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block rounded-2xl border border-zinc-100 p-6 transition hover:border-zinc-200 dark:border-zinc-700/40 dark:hover:border-zinc-700"
+    >
+      <div className="flex items-start gap-4">
+        <XIcon className="h-5 w-5 flex-none fill-zinc-500 mt-1" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap break-words">
+            {tweet.text}
+          </p>
+          
+          {/* Display images if available */}
+          {images.length > 0 && (
+            <div className={`mt-4 grid gap-2 ${
+              images.length === 1 
+                ? 'grid-cols-1' 
+                : images.length === 2 
+                ? 'grid-cols-2' 
+                : images.length === 3
+                ? 'grid-cols-2'
+                : 'grid-cols-2'
+            }`}>
+              {images.slice(0, 4).map((image, index) => {
+                // For 3 images, make the first one span 2 columns
+                const isFirstInThree = images.length === 3 && index === 0
+                const isLastInThree = images.length === 3 && index === 2
+                
+                return (
+                  <div
+                    key={image.media_key || index}
+                    className={`relative overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800 ${
+                      images.length === 1 
+                        ? 'aspect-video' 
+                        : isFirstInThree
+                        ? 'aspect-video col-span-2'
+                        : 'aspect-square'
+                    }`}
+                  >
+                    <Image
+                      src={image.url || image.preview_image_url}
+                      alt={image.alt_text || `Image ${index + 1} from tweet`}
+                      fill
+                      className="object-cover transition-transform hover:scale-[1.02]"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    {/* Show indicator if there are more than 4 images */}
+                    {index === 3 && images.length > 4 && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">
+                          +{images.length - 4} more
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+          
+          <div className="mt-4 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
+            <time dateTime={tweet.created_at}>
+              {formatTweetDate(tweet.created_at)}
+            </time>
+            {tweet.public_metrics && (
+              <>
+                {tweet.public_metrics.like_count > 0 && (
+                  <span>{tweet.public_metrics.like_count} likes</span>
+                )}
+                {tweet.public_metrics.retweet_count > 0 && (
+                  <span>{tweet.public_metrics.retweet_count} retweets</span>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </a>
+  )
+}
+
+function RecentTweets({ tweets }) {
+  if (!tweets || tweets.length === 0) {
+    return (
+      <div className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
+        <h2 className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <XIcon className="h-6 w-6 flex-none" />
+          <span className="ml-3">Recent Posts</span>
+        </h2>
+        <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+          No posts available at the moment.
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <XIcon className="h-6 w-6 fill-zinc-500" />
+        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          Recent Posts
+        </h2>
+      </div>
+      <div className="space-y-6">
+        {tweets.map((tweet) => (
+          <TweetCard key={tweet.id} tweet={tweet} />
+        ))}
+      </div>
+      <a
+        href="https://twitter.com/greatAdams01"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block text-sm text-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition"
+      >
+        View all posts on X →
+      </a>
+    </div>
+  )
+}
+
+function Skills() {
+  const skills = [
+    'Blockchain Development',
+    'Smart Contracts (Solidity, Tealscript)',
+    'Full-Stack JavaScript',
+    'Web3 Infrastructure',
+    'ZK Protocols',
+  ]
+
+  return (
+    <div className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
+      <h2 className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        <CodeIcon className="h-6 w-6 flex-none" />
+        <span className="ml-3">Expertise</span>
+      </h2>
+      <ul className="mt-6 space-y-3">
+        {skills.map((skill, index) => (
+          <li key={index} className="text-sm text-zinc-600 dark:text-zinc-400">
+            • {skill}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 export default async function Home() {
-  let articles = (await getAllArticles()).slice(0, 4)
+  const tweets = await getTweets()
 
   return (
     <>
       <Container className="mt-9">
         <div className="max-w-2xl">
           <h1 className="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
-            Blockchain Engineer, serial entrepreneur and amateur snooker player.
+            Blockchain Engineer, serial entrepreneur and snooker player.
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            I’m Great Ifeanyichukwu Adams, a blockchain engineer and serial entrepreneur based in Rivers State, Nigeria. I’m the founder and lead at LB labs, where we develop
+            I'm Great Ifeanyichukwu Adams, a blockchain engineer and serial entrepreneur based in Rivers State, Nigeria. I'm the founder and lead at LB labs, where we develop
             technologies that empower regular people to explore blockchain on their
             own terms.
           </p>  
@@ -305,9 +502,8 @@ export default async function Home() {
       <Container className="mt-24 md:mt-28">
         <div className="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
           <div className="flex flex-col gap-16">
-            {articles.map((article) => (
-              <Article key={article.slug} article={article} />
-            ))}
+            <RecentTweets tweets={tweets} />
+            <Skills />
           </div>
           <div className="space-y-10 lg:pl-16 xl:pl-24">
             <Newsletter />

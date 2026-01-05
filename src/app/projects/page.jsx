@@ -2,48 +2,48 @@ import Image from 'next/image'
 
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
-import logoAnimaginary from '@/images/logos/animaginary.svg'
+import logoDepe from '@/images/logos/depe.png'
 import logoCosmos from '@/images/logos/cosmos.svg'
-import logoHelioStream from '@/images/logos/helio-stream.svg'
-import logoOpenShuttle from '@/images/logos/open-shuttle.svg'
-import logoPlanetaria from '@/images/logos/planetaria.svg'
+import logoStreamlivr from '@/images/logos/streamlivr.jpg'
+import logoLBAcademy from '@/images/logos/lbdao.jpg'
+import logoTraddify from '@/images/logos/traddify.jpg'
 
 const projects = [
   {
-    name: 'Planetaria',
+    name: 'Traddify',
     description:
-      'Creating technology to empower civilians to explore space on their own terms.',
-    link: { href: 'http://planetaria.tech', label: 'planetaria.tech' },
-    logo: logoPlanetaria,
+      'Traddify is a platform that allows you to create and manage your own trading cards.',
+    link: { href: 'https://traddify.com/', label: 'traddify.com' },
+    logo: logoTraddify,
   },
   {
-    name: 'Animaginary',
+    name: 'DEPE',
     description:
-      'High performance web animation library, hand-written in optimized WASM.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoAnimaginary,
+      'DEPE is a decentralized exchange protocol that allows you to trade your tokens with other users, on Farcaster and Base app.',
+    link: { href: 'https://miniapp.depe.online/', label: 'depe.online' },
+    logo: logoDepe,
   },
   {
-    name: 'HelioStream',
+    name: 'Streamlivr',
     description:
-      'Real-time video streaming library, optimized for interstellar transmission.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoHelioStream,
+      'Streamlivr is a platform that allows you to stream your videos to the world and earn crypto.',
+    link: { href: 'https://streamlivr.com/', label: 'streamlivr.com' },
+    logo: logoStreamlivr,
   },
   {
-    name: 'cosmOS',
+    name: 'LB Academy',
     description:
-      'The operating system that powers our Planetaria space shuttles.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoCosmos,
-  },
-  {
-    name: 'OpenShuttle',
-    description:
-      'The schematics for the first rocket I designed that successfully made it to orbit.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoOpenShuttle,
-  },
+      'LB Academy is a platform that allows you to learn about blockchain and earn crypto.',
+    link: { href: 'https://academy.lbdao.xyz/', label: 'academy.lbdao.xyz' },
+    logo: logoLBAcademy,
+  }
+  // {
+  //   name: 'OpenShuttle',
+  //   description:
+  //     'The schematics for the first rocket I designed that successfully made it to orbit.',
+  //   link: { href: '#', label: 'github.com' },
+  //   logo: logoOpenShuttle,
+  // },
 ]
 
 function LinkIcon(props) {
@@ -65,8 +65,8 @@ export const metadata = {
 export default function Projects() {
   return (
     <SimpleLayout
-      title="Things I’ve made trying to put my dent in the universe."
-      intro="I’ve worked on tons of little projects over the years but these are the ones that I’m most proud of. Many of them are open-source, so if you see something that piques your interest, check out the code and contribute if you have ideas for how it can be improved."
+      title="Things I’ve made trying to put my dent in the blockchain ecosystem."
+      intro="Majority of these projects are live so you can check them out and use them."
     >
       <ul
         role="list"

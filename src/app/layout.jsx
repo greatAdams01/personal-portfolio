@@ -5,12 +5,12 @@ import '@/styles/tailwind.css'
 
 export const metadata = {
   title: {
-    template: '%s - Spencer Sharp',
+    template: '%s - Great Adams',
     default:
-      'Spencer Sharp - Software designer, founder, and amateur astronaut',
+      'Great Adams - Blockchain Engineer, serial entrepreneur and snooker player',
   },
   description:
-    'I’m Spencer, a software designer and entrepreneur based in New York City. I’m the founder and CEO of Planetaria, where we develop technologies that empower regular people to explore space on their own terms.',
+    'I’m Great Adams, a blockchain engineer and serial entrepreneur based in Rivers State, Nigeria. I’m the founder and lead at LB labs, where we develop technologies that empower regular people to explore blockchain on their own terms.',
   alternates: {
     types: {
       'application/rss+xml': `${process.env.NEXT_PUBLIC_SITE_URL}/feed.xml`,
