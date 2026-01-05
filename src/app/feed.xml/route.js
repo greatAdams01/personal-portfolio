@@ -10,7 +10,7 @@ export async function GET(req) {
   }
 
   let author = {
-    name: 'Spencer Sharp',
+    name: 'Great Adams',
     email: 'spencer@planetaria.tech',
   }
 

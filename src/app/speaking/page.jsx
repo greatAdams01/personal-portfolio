@@ -26,33 +26,40 @@ function Appearance({ title, description, event, cta, href }) {
 export const metadata = {
   title: 'Speaking',
   description:
-    'I’ve spoken at events all around the world and been interviewed for many podcasts.',
+    'I’ve spoken at events all around the country and been able to share my web3 knowledge as many as I can',
 }
 
 export default function Speaking() {
   return (
     <SimpleLayout
-      title="I’ve spoken at events all around the world and been interviewed for many podcasts."
-      intro="One of my favorite ways to share my ideas is live on stage, where there’s so much more communication bandwidth than there is in writing, and I love podcast interviews because they give me the opportunity to answer questions instead of just present my opinions."
+      title="I’ve spoken at events all around the country and been able to share my web3 knowledge as many as I can"
+      intro="Having benefited immensely from the insights and inspiration shared at tech events throughout my career, I view speaking invitations as both an honor and a responsibility. I’m deeply committed to giving back by sharing practical knowledge, lessons learned, and emerging ideas with the community. This act of paying it forward fuels my passion for fostering growth, collaboration, and continuous learning in tech."
     >
       <div className="space-y-20">
-        <SpeakingSection title="Conferences">
+        <SpeakingSection title="Events">
           <Appearance
-            href="#"
-            title="In space, no one can watch you stream — until now"
-            description="A technical deep-dive into HelioStream, the real-time streaming library I wrote for transmitting live video back to Earth."
-            event="SysConf 2021"
-            cta="Watch video"
+            href="https://www.canva.com/design/DAGYlpsiOt0/BKQQGF4jV3RNlEAecwUMRw/edit?utm_content=DAGYlpsiOt0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            title="Journey into the future of the internet"
+            description="A theoretical and philosophical talk on the future of the internet and how it will shape the future of the world."
+            event="Web3 conference, Port Harcourt 2024"
+            cta="View presentation"
           />
           <Appearance
-            href="#"
-            title="Lessons learned from our first product recall"
-            description="They say that if you’re not embarassed by your first version, you’re doing it wrong. Well when you’re selling DIY space shuttle kits it turns out it’s a bit more complicated."
-            event="Business of Startups 2020"
-            cta="Watch video"
+            href="https://www.canva.com/design/DAGgEg_4sIg/uNJx6RpZfv6VE0oGjhjZxw/edit?utm_content=DAGgEg_4sIg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            title="A Brave new world: A peek into Blockchains."
+            description="An introduction to the world of blockchains and how they work."
+            event="Roqqu campus tour, Rivers State 2025"
+            cta="View presentation"
+          />
+          <Appearance
+            href="https://www.canva.com/design/DAGw4GyfUdk/w2au73-_Q2Yhw4vuuvOEWQ/edit?utm_content=DAGw4GyfUdk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            title="Data Sovereignty: The Future of Data monetization with web3."
+            description="Shared insights on the future of data monetization with web3."
+            event="Biz merchant conference, Rivers State 2025"
+            cta="View presentation"
           />
         </SpeakingSection>
-        <SpeakingSection title="Podcasts">
+        {/* <SpeakingSection title="Podcasts">
           <Appearance
             href="#"
             title="Using design as a competitive advantage"
@@ -74,7 +81,7 @@ export default function Speaking() {
             event="How They Work Radio, September 2021"
             cta="Listen to podcast"
           />
-        </SpeakingSection>
+        </SpeakingSection> */}
       </div>
     </SimpleLayout>
   )
