@@ -4,7 +4,6 @@ import clsx from 'clsx'
 
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
-import { Newsletter } from '@/components/Newsletter'
 import {
   GitHubIcon,
   InstagramIcon,
@@ -240,26 +239,78 @@ function Photos() {
 
 async function getTweets() {
   try {
-    // In server components, we can use relative URLs or construct absolute URL
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+    const BEARER_TOKEN = process.env.X_BEARER_TOKEN
     
-    const response = await fetch(`${baseUrl}/api/tweets`, {
-      next: { revalidate: 3600 }, // Revalidate every hour
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    if (!BEARER_TOKEN) {
+      console.warn('X_BEARER_TOKEN not configured')
+      return []
+    }
+
+    // Import TwitterApi directly in server component
+    const { TwitterApi } = await import('twitter-api-v2')
+    const client = new TwitterApi(BEARER_TOKEN)
+    const readOnlyClient = client.readOnly
+
+    // Get user by username
+    const user = await readOnlyClient.v2.userByUsername('greatAdams01', {
+      'user.fields': ['id', 'name', 'username'],
     })
     
-    if (!response.ok) {
-      return null
+    if (!user.data) {
+      console.warn('User greatAdams01 not found')
+      return []
+    }
+
+    // Get user timeline (recent posts) with media
+    const tweets = await readOnlyClient.v2.userTimeline(user.data.id, {
+      max_results: 5,
+      exclude: ['replies', 'retweets'],
+      'tweet.fields': ['created_at', 'public_metrics', 'text', 'attachments'],
+      expansions: ['attachments.media_keys'],
+      'media.fields': ['type', 'url', 'preview_image_url', 'alt_text', 'width', 'height'],
+    })
+
+    // Map media to tweets
+    const mediaMap = {}
+    if (tweets.data.includes?.media) {
+      tweets.data.includes.media.forEach((media) => {
+        mediaMap[media.media_key] = media
+      })
+    }
+
+    // Attach media to tweets
+    const tweetsWithMedia = (tweets.data.data || []).map((tweet) => {
+      const media = []
+      if (tweet.attachments?.media_keys) {
+        tweet.attachments.media_keys.forEach((key) => {
+          if (mediaMap[key]) {
+            media.push(mediaMap[key])
+          }
+        })
+      }
+      return {
+        ...tweet,
+        media,
+      }
+    })
+
+    return tweetsWithMedia
+  } catch (error) {
+    // Handle rate limit errors gracefully (429 = Too Many Requests)
+    if (error.code === 429 || error?.rateLimit || error?.message?.includes('429')) {
+      // In development, only log once to avoid spam
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Twitter API rate limit exceeded. Tweets temporarily unavailable.')
+      }
+      return []
     }
     
-    const data = await response.json()
-    return data.data || []
-  } catch (error) {
-    console.error('Error fetching tweets:', error)
-    return null
+    // Log other errors but don't crash the page
+    if (error.message && !error.message.includes('429')) {
+      console.error('Error fetching tweets:', error.message)
+    }
+    
+    return []
   }
 }
 
@@ -434,6 +485,9 @@ function Skills() {
   )
 }
 
+// Revalidate tweets every hour
+export const revalidate = 3600
+
 export default async function Home() {
   const tweets = await getTweets()
 
@@ -486,7 +540,6 @@ export default async function Home() {
             <Skills />
           </div>
           <div className="space-y-10 lg:pl-16 xl:pl-24">
-            <Newsletter />
             <Resume />
           </div>
         </div>

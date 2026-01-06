@@ -3,6 +3,7 @@
 import { createContext, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { ThemeProvider, useTheme } from 'next-themes'
+import { ContactProvider } from '@/contexts/ContactContext'
 
 function usePrevious(value) {
   let ref = useRef(undefined)
@@ -47,8 +48,10 @@ export function Providers({ children }) {
   return (
     <AppContext.Provider value={{ previousPathname }}>
       <ThemeProvider attribute="class" disableTransitionOnChange>
-        <ThemeWatcher />
-        {children}
+        <ContactProvider>
+          <ThemeWatcher />
+          {children}
+        </ContactProvider>
       </ThemeProvider>
     </AppContext.Provider>
   )

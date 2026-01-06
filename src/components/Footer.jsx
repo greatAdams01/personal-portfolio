@@ -1,6 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 
 import { ContainerInner, ContainerOuter } from '@/components/Container'
+import { useContact } from '@/contexts/ContactContext'
 
 function NavLink({ href, children }) {
   return (
@@ -14,16 +17,24 @@ function NavLink({ href, children }) {
 }
 
 export function Footer() {
+  const { setIsOpen } = useContact()
+  
   return (
     <footer className="mt-32 flex-none">
       <ContainerOuter>
         <div className="border-t border-zinc-100 pt-10 pb-16 dark:border-zinc-700/40">
           <ContainerInner>
             <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-              <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-1 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 <NavLink href="/about">About</NavLink>
                 <NavLink href="/projects">Projects</NavLink>
                 <NavLink href="/speaking">Speaking</NavLink>
+                <button
+                  onClick={() => setIsOpen(true)}
+                  className="transition hover:text-teal-500 dark:hover:text-teal-400 cursor-pointer font-semibold text-teal-500 dark:text-teal-400"
+                >
+                  Contact
+                </button>
               </div>
               <p className="text-sm text-zinc-400 dark:text-zinc-500">
                 &copy; {new Date().getFullYear()} Great Adams. All rights
